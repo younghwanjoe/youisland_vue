@@ -25,7 +25,9 @@
           </select>
           <h3>텍스트 입력:</h3>
 
-          <p><textarea cols="40" row="10" v-model="translationText"></textarea></p>
+          <p>
+            <textarea cols="40" row="10" v-model="translationText"></textarea>
+          </p>
 
           <input type="button" value="번역하기" @click="translateSubmit()" />
 
@@ -38,21 +40,12 @@
               v-model="translationResult"
               disabled
             ></textarea>
-            <p>
-            <input type="button" value="감정평가" @click="emotionSubmit()" />
-            </p>
           </div>
-      
 
-          <div v-if="emotionResult != null">
+          <div v-if="translationResult != null">
             <h3>감정 결과:</h3>
 
-            <textarea
-              cols="40"
-              row="10"
-              v-model="emotionResult"
-              disabled
-            ></textarea>
+            <emotion-chart :translationText="translationText" :selectedLanguage="selectedLanguage" ></emotion-chart>
           </div>
         </fieldset>
       </form>
@@ -61,16 +54,21 @@
 </template>
 
 <script>
+import { EventBus } from "../utils/event-bus"
 /* eslint-disable */
+import EmotionChart from "../components/EmotionChart";
+
 export default {
- name: "translate",
+  name: "translate",
+  components: {
+    EmotionChart,
+  },
   data() {
     return {
       translationText: null,
       supportedLanguage: null,
       selectedLanguage: "en",
       translationResult: null,
-      emotionResult: null,
     };
   },
   created() {
@@ -82,30 +80,18 @@ export default {
   },
   methods: {
     translateSubmit() {
+      
       let that = this;
       const params = {
         text: this.translationText,
         target: this.selectedLanguage,
       };
-      window.axios
-        .post("/api/translate/submit",params)
-        .then((res) => {
-          that.translationResult = res.data.translation;
-        });
+      window.axios.post("/api/translate/submit", params).then((res) => {
+        that.translationResult = res.data.translation;
+        console.log('submit')
+        EventBus.$emit("click_submit","click")
+      });
     },
-    emotionSubmit() {
-      let that = this;
-      const params = {
-        text: this.translationText,
-        target: this.selectedLanguage,
-      };
-      window.axios
-        .post("/api/emotion/submit",params)
-        .then((res) => {
-          that.emotionResult = res.data.emotion;
-        });
-
-    }
   },
 };
 </script>
