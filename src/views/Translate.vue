@@ -27,7 +27,7 @@
 
           <p><textarea cols="40" row="10" v-model="translationText"></textarea></p>
 
-          <input type="button" value="Sumit" @click="submit()" />
+          <input type="button" value="번역하기" @click="translateSubmit()" />
 
           <div v-if="translationResult != null">
             <h3>번역 결과:</h3>
@@ -36,6 +36,21 @@
               cols="40"
               row="10"
               v-model="translationResult"
+              disabled
+            ></textarea>
+            <p>
+            <input type="button" value="감정평가" @click="emotionSubmit()" />
+            </p>
+          </div>
+      
+
+          <div v-if="emotionResult != null">
+            <h3>감정 결과:</h3>
+
+            <textarea
+              cols="40"
+              row="10"
+              v-model="emotionResult"
               disabled
             ></textarea>
           </div>
@@ -48,12 +63,14 @@
 <script>
 /* eslint-disable */
 export default {
+ name: "translate",
   data() {
     return {
       translationText: null,
       supportedLanguage: null,
       selectedLanguage: "en",
       translationResult: null,
+      emotionResult: null,
     };
   },
   created() {
@@ -64,7 +81,7 @@ export default {
     });
   },
   methods: {
-    submit() {
+    translateSubmit() {
       let that = this;
       const params = {
         text: this.translationText,
@@ -76,6 +93,19 @@ export default {
           that.translationResult = res.data.translation;
         });
     },
+    emotionSubmit() {
+      let that = this;
+      const params = {
+        text: this.translationText,
+        target: this.selectedLanguage,
+      };
+      window.axios
+        .post("/api/emotion/submit",params)
+        .then((res) => {
+          that.emotionResult = res.data.emotion;
+        });
+
+    }
   },
 };
 </script>
