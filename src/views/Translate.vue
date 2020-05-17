@@ -43,7 +43,6 @@
           </div>
 
           <div v-if="translationResult != null">
-            <h3>감정 결과:</h3>
 
             <emotion-chart :translationText="translationText" :selectedLanguage="selectedLanguage" ></emotion-chart>
           </div>
