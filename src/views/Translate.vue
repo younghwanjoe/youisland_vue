@@ -78,18 +78,18 @@ export default {
     });
   },
   methods: {
-    translateSubmit() {
+    async translateSubmit() {
       
       let that = this;
       const params = {
         text: this.translationText,
         target: this.selectedLanguage,
       };
-      window.axios.post("/api/translate/submit", params).then((res) => {
+      await window.axios.post("/api/translate/submit", params).then((res) => {
         that.translationResult = res.data.translation;
         console.log('submit')
-        EventBus.$emit("click_submit","click")
       });
+    EventBus.$emit("click_submit","click")
     },
   },
 };
