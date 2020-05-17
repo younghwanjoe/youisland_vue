@@ -6,21 +6,21 @@
 
 <script>
 /* eslint-disable */
-import { EventBus } from "../utils/event-bus"
+import { EventBus } from "../utils/event-bus";
 import RadarChart from "./Chart.vue";
 
 export default {
   name: "EmotionChart",
   components: { RadarChart },
   props: {
-        translationText: {
-            type: String,
-            default: null
-        },
-        selectedLanguage: {
-            type: String,
-            default: "en"
-        },
+    translationText: {
+      type: String,
+      default: null,
+    },
+    selectedLanguage: {
+      type: String,
+      default: "en",
+    },
   },
   data: () => ({
     loaded: false,
@@ -28,49 +28,56 @@ export default {
       labels: [],
       datasets: [
         {
-          data: [
-         
-          ],
+          data: [],
         },
       ],
     },
     options: {
+        title: {
+            display: true,
+            text: '감정 분석 결과'
+        },
       scale: {
         angleLines: {
           display: false,
         },
-        ticks: {
-          suggestedMin: 0,
-          suggestedMax: 1,
-        },
+        // ticks: {
+        //   suggestedMin: 0,
+        //   suggestedMax: 1,
+        // },
       },
+      responsive: true,
+      maintainAspectRatio: false,
+      legend: {
+            display: true,
+            labels: {
+                fontColor: 'rgb(255, 99, 132)'
+            }
+        }
     },
-    emotionResult: null
+    emotionResult: null,
   }),
   created() {
-      EventBus.$on('click_submit',(e)=>{
-          this.emotionSubmit()
-      })
-  },
-  async mounted() {
-   
+    EventBus.$on("click_submit", (e) => {
+    console.log('emotion')
+      this.emotionSubmit();
+    });
   },
   watch: {
-    
-      emotionResult(newVal, oldVal){
-          let labels = []
-          let data = []
-          const keys = Object.keys(newVal)
-          for(let i = 0; i< keys.length ; i++){
-              labels.push(keys[i])
-              data.push(newVal[keys[i]])
-          }
-          const datasets = [{data: data}]
-          this.chartdata = {
-              labels: labels,
-              datasets: datasets
-          }
+    emotionResult(newVal, oldVal) {
+      let labels = [];
+      let data = [];
+      const keys = Object.keys(newVal);
+      for (let i = 0; i < keys.length; i++) {
+        labels.push(keys[i]);
+        data.push(newVal[keys[i]]);
       }
+      const datasets = [{ data: data }];
+      this.chartdata = {
+        labels: labels,
+        datasets: datasets,
+      };
+    },
   },
   methods: {
     emotionSubmit() {
