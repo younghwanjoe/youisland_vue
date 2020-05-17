@@ -49,7 +49,7 @@ export default {
       responsive: true,
       maintainAspectRatio: false,
       legend: {
-            display: true,
+            display: false,
             labels: {
                 fontColor: 'rgb(255, 99, 132)'
             }
